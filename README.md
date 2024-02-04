@@ -1,11 +1,12 @@
 ## KUBECTL COMMANDS
 
+install prometeus 
 
 ```
-kubectl logs pod_name -n namespace -c container_name
+ % kctl apply -f https://raw.githubusercontent.com/istio/istio/release-1.20/samples/addons/prometheus.yaml
 ```
 
-
+install kiali
 ```
-kubectl exec -it pod_name -n namespace -- /bin/sh
+kctl apply -f https://raw.githubusercontent.com/istio/istio/release-1.20/samples/addons/kiali.yaml    
 ```

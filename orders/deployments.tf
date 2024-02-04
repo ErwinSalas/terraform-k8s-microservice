@@ -36,11 +36,11 @@ resource "kubernetes_deployment" "order-srv-deployment" {
           }
           env {
             name  = "DB_URL"
-            value = "postgres://erwin:password@order-database/order"
+            value = "postgres://erwin:password@order-database.k8s-microservices:5236/order"
           }
-          env {
-            name         = "PRODUCT_SVC_URL"
-            value = "product-service"
+           env {
+            name  = "PRODUCT_SVC_URL"
+            value = "product-service.k8s-microservices:82"
           }
         
           port {

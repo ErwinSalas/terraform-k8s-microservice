@@ -37,7 +37,7 @@ resource "kubernetes_service" "product-service" {
       name        = "grpc"
       protocol    = "TCP"
       port        = 82
-      target_port = 50053 # Expose the port of your auth-service container
+      target_port = 50054 # Expose the port of your auth-service container
     }
   }
 }

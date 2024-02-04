@@ -37,7 +37,7 @@ resource "kubernetes_deployment" "auth-srv-deployment" {
           // auth-database:5235 represents the service name:port
           env {
             name  = "DB_URL"
-            value = "postgres://erwin:password@auth-database:5235/auth"
+            value = "postgres://erwin:password@auth-database.k8s-microservices:5235/auth"
           }
           env {
             name  = "JWT_SECRET_KEY"

@@ -34,15 +34,15 @@ resource "kubernetes_deployment" "api-gateway-deployment" {
           }
           env {
             name  = "AUTH_SVC_URL"
-            value = "http://auth-service:83"
+            value = "auth-service.k8s-microservices:83"
           }
           env {
             name  = "PRODUCT_SVC_URL"
-            value = "http://product-service:81"
+            value = "product-service.k8s-microservices:82"
           }
           env {
             name  = "ORDER_SVC_URL"
-            value = "http://order-service:82"
+            value = "order-service.k8s-microservices:81"
           }
 
 

@@ -1,6 +1,9 @@
 resource "kubernetes_namespace" "main" {
   metadata {
     name = "k8s-microservices"
+    labels = {
+      istio-injection = "enabled"
+    }
   }
 }
 

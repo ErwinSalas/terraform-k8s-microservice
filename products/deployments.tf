@@ -36,7 +36,7 @@ resource "kubernetes_deployment" "product-srv-deployment" {
           }
           env {
             name  = "DB_URL"
-            value = "postgres://erwin:password@product-database/product"
+            value = "postgres://erwin:password@product-database.k8s-microservices:5237/product"
           }
         
           port {

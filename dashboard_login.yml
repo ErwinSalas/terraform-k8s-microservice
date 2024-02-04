@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: dashboard-login
+  namespace: kube-system
+type: kubernetes.io/basic-auth
+data:
+  username: ZXJ3aW5zYWxhcw==
+  password: MTIzNDU2
