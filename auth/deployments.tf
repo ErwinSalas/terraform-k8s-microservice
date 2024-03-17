@@ -79,7 +79,7 @@ resource "kubernetes_stateful_set_v1" "auth-db-statefulset" {
   spec {
     service_name = "auth-db-statefulset"
 
-    replicas = var.replicas
+    replicas = 1
     selector {
       match_labels = {
         app = var.db_label

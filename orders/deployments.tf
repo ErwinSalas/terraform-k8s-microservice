@@ -74,7 +74,7 @@ resource "kubernetes_stateful_set_v1" "order-db-statefulset" {
 
   spec {
     service_name = "order-db-statefulset"
-    replicas = var.replicas
+    replicas = 1
 
     selector {
       match_labels = {

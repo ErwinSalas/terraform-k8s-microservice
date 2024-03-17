@@ -5,6 +5,8 @@ resource "kubernetes_namespace" "main" {
       istio-injection = "enabled"
     }
   }
+
+  depends_on = [ module.gcp_gke ]
 }
 
 module "api" {
@@ -40,4 +42,65 @@ module "products" {
   app_label  = "product-service"
   db_label   = "product-database"
   depends_on = [kubernetes_namespace.main]
+}
+
+module "gcp_vpc" {
+  source     = "./vpc"
+  cidr_range =  "10.10.0.0/24"
+  region =   var.region
+  project  = var.project
+  zone =   var.zone
+}
+
+
+module "gcp_gke" {
+  source     = "./gke"
+  gke_num_nodes = 2
+  region =   var.region
+  project = var.project
+  zone =    var.zone
+  vpc_name = module.gcp_vpc.vpc_name
+  subnet_name = module.gcp_vpc.subnet_name
+  depends_on = [module.gcp_vpc]
+}
+
+
+module "istio" {
+  source = "./istio"
+
+  depends_on = [
+    kubernetes_namespace.main
+  ]
+}
+
+module "istio-ingressgateway" {
+  source = "./ingressgateway"
+
+  release_name = "istio-ingressgateway"
+  namespace    = "istio-ingress"
+
+  depends_on = [
+    module.istio
+  ]
+}
+
+module "prometheus" {
+  source = "./prometheus"
+
+  istio_ns = "istio-system"
+  depends_on = [
+    module.istio
+  ]
+}
+
+module "kiali" {
+  source = "./kiali"
+
+  istio_ns = "istio-system"
+  lb       = module.istio-ingressgateway.lb_ip
+
+  depends_on = [
+    module.istio,
+    module.istio-ingressgateway
+  ]
 }

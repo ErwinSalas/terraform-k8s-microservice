@@ -70,7 +70,7 @@ resource "kubernetes_stateful_set_v1" "product-db-statefulset" {
   spec {
     service_name = "product-db-statefulset"
 
-    replicas = var.replicas
+    replicas = 1
 
     selector {
       match_labels = {

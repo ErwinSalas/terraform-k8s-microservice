@@ -1,0 +1,14 @@
+global:
+  tracer:
+    zipkin:
+      address: zipkin:9411
+
+meshConfig:
+  defaultConfig:
+    tracing:
+      # tlsSettings: ISTIO_MUTUAL
+      sampling: 100.0
+    tracingServiceName: zipkin
+  # enableAutoMtls: true
+  # outboundTrafficPolicy: 
+  #   mode: REGISTRY_ONLY
