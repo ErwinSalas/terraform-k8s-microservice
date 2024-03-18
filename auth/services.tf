@@ -1,5 +1,5 @@
 resource "kubernetes_service" "auth-db-service" {
-  depends_on = [ kubernetes_stateful_set_v1.auth-db-statefulset ]
+  depends_on = [kubernetes_stateful_set_v1.auth-db-statefulset]
 
   metadata {
     name = var.db_label
@@ -24,7 +24,7 @@ resource "kubernetes_service" "auth-db-service" {
 }
 
 resource "kubernetes_service" "auth-service" {
-  depends_on = [ kubernetes_deployment.auth-srv-deployment ]
+  depends_on = [kubernetes_deployment.auth-srv-deployment]
   metadata {
     name      = "auth-service"
     namespace = var.namespace

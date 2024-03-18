@@ -6,7 +6,23 @@ resource "kubernetes_namespace" "main" {
     }
   }
 
-  depends_on = [ module.gcp_gke ]
+  depends_on = [module.gcp_gke]
+}
+
+resource "kubernetes_namespace" "ingress" {
+  metadata {
+    name = "istio-ingress"
+  }
+
+  depends_on = [module.gcp_gke]
+}
+
+resource "kubernetes_namespace" "istiosystem" {
+  metadata {
+    name = "istio-system"
+  }
+
+  depends_on = [module.gcp_gke]
 }
 
 module "api" {
@@ -46,30 +62,30 @@ module "products" {
 
 module "gcp_vpc" {
   source     = "./vpc"
-  cidr_range =  "10.10.0.0/24"
-  region =   var.region
-  project  = var.project
-  zone =   var.zone
+  cidr_range = "10.10.0.0/24"
+  region     = var.region
+  project    = var.project
+  zone       = var.zone
 }
 
 
 module "gcp_gke" {
-  source     = "./gke"
+  source        = "./gke"
   gke_num_nodes = 2
-  region =   var.region
-  project = var.project
-  zone =    var.zone
-  vpc_name = module.gcp_vpc.vpc_name
-  subnet_name = module.gcp_vpc.subnet_name
-  depends_on = [module.gcp_vpc]
+  region        = var.region
+  project       = var.project
+  zone          = var.zone
+  vpc_name      = module.gcp_vpc.vpc_name
+  subnet_name   = module.gcp_vpc.subnet_name
+  depends_on    = [module.gcp_vpc]
 }
 
 
 module "istio" {
-  source = "./istio"
-
+  source    = "./istio"
+  namespace = kubernetes_namespace.istiosystem.metadata[0].name
   depends_on = [
-    kubernetes_namespace.main
+    kubernetes_namespace.istiosystem
   ]
 }
 
@@ -77,30 +93,23 @@ module "istio-ingressgateway" {
   source = "./ingressgateway"
 
   release_name = "istio-ingressgateway"
-  namespace    = "istio-ingress"
+  namespace    = kubernetes_namespace.ingress.metadata[0].name
 
   depends_on = [
-    module.istio
-  ]
-}
-
-module "prometheus" {
-  source = "./prometheus"
-
-  istio_ns = "istio-system"
-  depends_on = [
-    module.istio
+    module.istio,
+    kubernetes_namespace.ingress
   ]
 }
 
 module "kiali" {
-  source = "./kiali"
-
-  istio_ns = "istio-system"
-  lb       = module.istio-ingressgateway.lb_ip
+  source     = "./kiali"
+  istio_ns   = kubernetes_namespace.istiosystem.metadata[0].name
+  ingress_ns = kubernetes_namespace.ingress.metadata[0].name
+  lb         = module.istio-ingressgateway.lb_ip
 
   depends_on = [
     module.istio,
-    module.istio-ingressgateway
+    module.istio-ingressgateway,
+    kubernetes_namespace.istiosystem
   ]
 }

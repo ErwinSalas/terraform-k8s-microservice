@@ -14,15 +14,18 @@ resource "google_container_cluster" "primary" {
   remove_default_node_pool = true
   initial_node_count       = 1
 
-  network    = var.vpc_name
-  subnetwork = var.subnet_name
+  network             = var.vpc_name
+  subnetwork          = var.subnet_name
+  deletion_protection = false
 }
 
 # Separately Managed Node Pool
 resource "google_container_node_pool" "primary_nodes" {
-  name     = google_container_cluster.primary.name
-  location = var.region
-  cluster  = google_container_cluster.primary.name
+  name           = google_container_cluster.primary.name
+  location       = var.region
+  node_locations = [var.zone] # Misma zona para todos los nodos
+
+  cluster = google_container_cluster.primary.name
 
   version    = data.google_container_engine_versions.gke_version.release_channel_latest_version["STABLE"]
   node_count = var.gke_num_nodes
@@ -40,7 +43,7 @@ resource "google_container_node_pool" "primary_nodes" {
 
     disk_size_gb = 10 # Set disk size within the existing quota
 
-    machine_type = "n1-standard-1"
+    machine_type = "n1-standard-2"
     tags         = ["gke-node", "${var.project}-gke"]
     metadata = {
       disable-legacy-endpoints = "true"

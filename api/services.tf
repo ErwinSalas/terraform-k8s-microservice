@@ -1,6 +1,6 @@
 resource "kubernetes_service" "api-gateway-service" {
   metadata {
-    name = "api-gateway-service"
+    name      = "api-gateway-service"
     namespace = var.namespace
   }
   spec {
@@ -8,7 +8,7 @@ resource "kubernetes_service" "api-gateway-service" {
       app = var.app_label
     }
     port {
-      protocol = "TCP"
+      protocol    = "TCP"
       port        = 8580
       target_port = 3000
     }

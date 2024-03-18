@@ -1,17 +1,17 @@
 variable "project" {
-  type = string 
+  type = string
 }
 
 variable "region" {
-  type = string 
+  type = string
 }
 
 variable "zone" {
-  type = string 
+  type = string
 }
 
 variable "gke_num_nodes" {
-  type = string 
+  type = string
 }
 
 variable "vpc_name" {

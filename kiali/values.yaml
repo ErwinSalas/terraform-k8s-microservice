@@ -1,0 +1,11 @@
+auth:
+  strategy: anonymous
+
+external_services:
+  istio:
+    root_namespace: ${istio_ns}
+    ingress_gateway:
+      service_name: istio-ingressgateway
+      service_port: 80
+      service_address: ${lb}
+    gateway_host: istio-ingressgateway.${ingress_ns}.svc.cluster.local

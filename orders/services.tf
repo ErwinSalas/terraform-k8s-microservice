@@ -1,9 +1,9 @@
 resource "kubernetes_service" "order-db-service" {
-  depends_on = [ kubernetes_stateful_set_v1.order-db-statefulset ]
+  depends_on = [kubernetes_stateful_set_v1.order-db-statefulset]
 
   metadata {
-    name      = var.db_label
-    labels    = {
+    name = var.db_label
+    labels = {
       app = var.db_label
     }
     namespace = var.namespace
@@ -23,7 +23,7 @@ resource "kubernetes_service" "order-db-service" {
 }
 
 resource "kubernetes_service" "order-service" {
-  depends_on = [ kubernetes_deployment.order-srv-deployment ]
+  depends_on = [kubernetes_deployment.order-srv-deployment]
   metadata {
     name      = "order-service"
     namespace = var.namespace
@@ -35,10 +35,10 @@ resource "kubernetes_service" "order-service" {
     }
 
     port {
-      name       = "grpc"
-      protocol   = "TCP"
-      port       = 81
-      target_port = 50053  # Expose the port of your auth-service container
+      name        = "grpc"
+      protocol    = "TCP"
+      port        = 81
+      target_port = 50053 # Expose the port of your auth-service container
     }
   }
 }

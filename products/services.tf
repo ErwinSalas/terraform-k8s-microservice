@@ -1,5 +1,5 @@
 resource "kubernetes_service" "product-db-service" {
-  depends_on = [ kubernetes_stateful_set_v1.product-db-statefulset ]
+  depends_on = [kubernetes_stateful_set_v1.product-db-statefulset]
   metadata {
     name = var.db_label
     labels = {
@@ -22,9 +22,9 @@ resource "kubernetes_service" "product-db-service" {
 }
 
 resource "kubernetes_service" "product-service" {
-  depends_on = [ kubernetes_deployment.product-srv-deployment ]
+  depends_on = [kubernetes_deployment.product-srv-deployment]
   metadata {
-    name = var.app_label
+    name      = var.app_label
     namespace = var.namespace
   }
 

@@ -1,17 +1,17 @@
 variable "project" {
-  type     =string 
+  type = string
 }
 
 variable "region" {
-  type     =string 
+  type = string
 }
 
 variable "zone" {
-  type     =string 
+  type = string
 }
 
 variable "cidr_range" {
-  type     =string 
+  type = string
 }
 
 

@@ -38,11 +38,11 @@ resource "kubernetes_deployment" "order-srv-deployment" {
             name  = "DB_URL"
             value = "postgres://erwin:password@order-database.k8s-microservices:5236/order"
           }
-           env {
+          env {
             name  = "PRODUCT_SVC_URL"
             value = "product-service.k8s-microservices:82"
           }
-        
+
           port {
             container_port = 50053
           }
@@ -74,7 +74,7 @@ resource "kubernetes_stateful_set_v1" "order-db-statefulset" {
 
   spec {
     service_name = "order-db-statefulset"
-    replicas = 1
+    replicas     = 1
 
     selector {
       match_labels = {
@@ -94,8 +94,8 @@ resource "kubernetes_stateful_set_v1" "order-db-statefulset" {
           image = "postgres:latest"
           name  = "order-database"
 
-          args = [ "-p", "5236" ]
-        
+          args = ["-p", "5236"]
+
           env {
             name  = "POSTGRES_USER"
             value = "erwin"
@@ -110,7 +110,7 @@ resource "kubernetes_stateful_set_v1" "order-db-statefulset" {
             name  = "POSTGRES_DB"
             value = "order"
           }
-        
+
           port {
             container_port = 5236
           }

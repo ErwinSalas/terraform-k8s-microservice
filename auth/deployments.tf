@@ -44,7 +44,7 @@ resource "kubernetes_deployment" "auth-srv-deployment" {
             value = "r43t18sc"
           }
           env {
-            name     = "API_SECRET"
+            name  = "API_SECRET"
             value = "98hbun98h"
           }
 
@@ -97,7 +97,7 @@ resource "kubernetes_stateful_set_v1" "auth-db-statefulset" {
         container {
           image = "postgres:latest"
           name  = "auth-database"
-          args = [ "-p", "5235" ]
+          args  = ["-p", "5235"]
 
           env {
             name  = "POSTGRES_USER"

@@ -1,4 +1,5 @@
 service:
+  type: LoadBalancer
   ports:
   - name: status-port
     port: 15021
