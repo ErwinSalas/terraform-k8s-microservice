@@ -1,23 +1,28 @@
-service:
+gateways:
+  istio-ingressgateway:
+    serviceAnnotations:
+      cloud.google.com/load-balancer-type: "External"
+      service.beta.kubernetes.io/external-traffic: "Only"
+service:    
   type: LoadBalancer
   ports:
-  - name: status-port
-    port: 15021
-    protocol: TCP
-    targetPort: 15021
-  - name: http2
-    port: 80
-    protocol: TCP
-    targetPort: 80
-  - name: https
-    port: 443
-    protocol: TCP
-    targetPort: 443
-  - name: kiali
-    port: 20001
-    targetPort: 20001
-    protocol: TCP
-  - name: api
-    port: 20002
-    targetPort: 83
-    protocol: TCP
+    - name: status-port
+      port: 15021
+      protocol: TCP
+      targetPort: 15021
+    - name: http2
+      port: 80
+      protocol: TCP
+      targetPort: 80
+    - name: https
+      port: 443
+      protocol: TCP
+      targetPort: 443
+    - name: kiali
+      port: 20001
+      protocol: TCP
+      targetPort: 20001
+    - name: api
+      port: 20002
+      protocol: TCP
+      targetPort: 20001

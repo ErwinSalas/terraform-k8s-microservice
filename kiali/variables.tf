@@ -13,3 +13,7 @@ variable "ingress_ns" {
 variable "lb" {
   type = string
 }
+
+variable "gateway_name" {
+  type = string
+}

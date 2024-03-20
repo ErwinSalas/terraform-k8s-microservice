@@ -1,0 +1,23 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: api-gateway-vs  # Update this name if needed
+  namespace: k8s-microservices  # Replace with the actual namespace
+
+spec:
+  hosts:
+  - "*"  # Change this to your desired hostname or domain
+
+  gateways:
+  - api-ingressgateway  # Name of the Istio Ingress Gateway service
+
+  http:
+  - match:
+    - uri:
+        prefix: "/"  # Adjust path prefix based on your service requirements
+  - route:
+    - destination:
+        host: "api-gateway-service.k8s-microservices.svc.cluster.local"  # Update with your service name
+        port:
+          number: 8580  # Update with your service port
+

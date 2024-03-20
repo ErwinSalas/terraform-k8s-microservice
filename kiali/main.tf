@@ -14,27 +14,41 @@ resource "helm_release" "kiali" {
   ]
 }
 
-resource "kubernetes_manifest" "kiali_vs" {
+resource "kubernetes_manifest" "kiali_virtual_service" {
   manifest = {
     apiVersion = "networking.istio.io/v1alpha3"
     kind       = "VirtualService"
     metadata = {
-      name      = "kiali"
-      namespace = var.istio_ns  # Cambia esto según el namespace donde esté desplegado Istio
+      name      = "kiali-vs"
+      namespace = var.istio_ns
     }
     spec = {
-      hosts = ["*"]  # Cambia esto por el dominio o hostname que deseas usar para acceder a Kiali
-      gateways = ["istio-ingressgateway"]  # Nombre del Service de Istio Ingress Gateway
-      http = [{
-        route = [{
-          destination = {
-            host = "kiali.istio-system.svc.cluster.local"  # Nombre del servicio de Kiali dentro de tu clúster
-            port = {
-              number = 20001  # Puerto donde se sirve el dashboard de Kiali
+      hosts = ["*"]  # Change this to your desired hostname or domain
+      gateways = ["istio-ingressgateway"]  # Name of the Istio Ingress Gateway service
+
+      http = [
+        {
+          match = [
+            {
+              port = 20001
             }
-          }
-        }]
-      }]
+          ]
+          route = [
+            {
+              destination = {
+                host = "kiali.${var.istio_ns}.svc.cluster.local"  # Name of your Kiali service within the cluster
+                port = {
+                  number = 20001  # Port where Kiali is exposed
+                }
+              }
+            }
+          ]
+        }
+      ]
     }
   }
 }
+
+# resource "kubernetes_manifest" "virtual-service" {
+#   manifest = yamldecode("${file("${path.module}/virtual-service.yaml")}")
+# }

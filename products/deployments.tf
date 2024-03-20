@@ -44,12 +44,11 @@ resource "kubernetes_deployment" "product-srv-deployment" {
           }
           resources {
             limits = {
-              cpu    = "0.5"
               memory = "512Mi"
             }
             requests = {
-              cpu    = "250m"
-              memory = "50Mi"
+              cpu    = "10m"
+              memory = "64Mi"
             }
           }
         }
@@ -111,12 +110,11 @@ resource "kubernetes_stateful_set_v1" "product-db-statefulset" {
 
           resources {
             limits = {
-              cpu    = "0.5"
               memory = "512Mi"
             }
             requests = {
-              cpu    = "250m"
-              memory = "50Mi"
+              cpu    = "10m"
+              memory = "64Mi"
             }
           }
         }

@@ -28,9 +28,14 @@ resource "kubernetes_namespace" "istiosystem" {
 module "api" {
   source     = "./api"
   replicas   = 1
+  istio_ns = kubernetes_namespace.ingress.metadata[0].name
   namespace  = kubernetes_namespace.main.metadata[0].name
   app_label  = "api-gateway"
-  depends_on = [kubernetes_namespace.main]
+  gateway_name = module.istio-ingressgateway.gateway_name
+  depends_on = [
+    kubernetes_namespace.main, 
+    module.istio,
+  ]
 }
 
 module "auth" {
@@ -106,6 +111,7 @@ module "kiali" {
   istio_ns   = kubernetes_namespace.istiosystem.metadata[0].name
   ingress_ns = kubernetes_namespace.ingress.metadata[0].name
   lb         = module.istio-ingressgateway.lb_ip
+  gateway_name = module.istio-ingressgateway.gateway_name
 
   depends_on = [
     module.istio,

@@ -24,3 +24,26 @@ resource "helm_release" "istiod" {
     helm_release.istiobase,
   ]
 }
+
+
+# resource "kubernetes_manifest" "grafana" {
+#   manifest = filebase64decode("${file("${path.module}/addons/grafana.yaml")}")
+#   depends_on = [
+#     helm_release.istiobase,
+#   ]
+# }
+
+
+# resource "kubernetes_manifest" "prometheus" {
+#   manifest = filebase64decode("${file("${path.module}/addons/prometheus.yaml")}")
+#   depends_on = [
+#     helm_release.istiobase,
+#   ]
+# }
+
+# resource "kubernetes_manifest" "jaeger" {
+#   manifest = filebase64decode("${file("${path.module}/addons/jaeger.yaml")}")
+#   depends_on = [
+#     helm_release.istiobase,
+#   ]
+# }

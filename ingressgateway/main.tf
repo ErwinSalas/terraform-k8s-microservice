@@ -21,27 +21,81 @@ data "kubernetes_service" "lb" {
   ]
 }
 
-resource "tls_private_key" "my_private_key" {
-  algorithm = "RSA"
-  rsa_bits  = 4096
-}
-
-resource "tls_self_signed_cert" "my_self_signed_cert" {
-  private_key_pem       = tls_private_key.my_private_key.private_key_pem
-  validity_period_hours = 8760  # Validez del certificado: 1 año (8760 horas)
-  allowed_uses          = ["digital_signature", "key_encipherment"]
-}
-
-
-
-resource "kubernetes_secret" "my_tls_secret" {
-  metadata {
-    name      = "my-tls-secret"
-    namespace = var.namespace
+# not working due to https://github.com/hashicorp/terraform-provider-kubernetes/issues/1929
+resource "kubernetes_manifest" "api_ingressgateway" {
+  manifest = {
+    kind       = "Gateway"
+    apiVersion = "networking.istio.io/v1alpha3"
+    metadata = {
+      name      = "api-ingressgateway"
+      namespace = "k8s-microservices"
+    }
+    spec = {
+      selector = {
+        istio = "ingressgateway"
+      }
+      servers = [
+        {
+          port = {
+            number   = 80
+            name     = "http"
+            protocol = "HTTP"
+          }
+          hosts = ["*"]
+        },
+        {
+          port = {
+            number   = 20002
+            name     = "api"
+            protocol = "HTTP"
+          }
+          hosts = ["*"]
+        }
+      ]
+    }
   }
-
-  data = {
-    "tls.crt" = tls_self_signed_cert.my_self_signed_cert.cert_pem
-    "tls.key" = tls_private_key.my_private_key.private_key_pem
-  }
+  depends_on = [ helm_release.istio-ingress ]
 }
+
+resource "kubernetes_manifest" "istio_ingressgateway" {
+  manifest = {
+    kind       = "Gateway"
+    apiVersion = "networking.istio.io/v1alpha3"
+    metadata = {
+      name      = "istio-ingressgateway"
+      namespace = "istio-system"
+    }
+    spec = {
+      selector = {
+        istio = "ingressgateway"
+      }
+      servers = [
+        {
+          port = {
+            number   = 80
+            name     = "http"
+            protocol = "HTTP"
+          }
+          hosts = ["*"]
+        },
+        {
+          port = {
+            number   = 20001
+            name     = "kiali"
+            protocol = "HTTP"
+          }
+          hosts = ["*"]
+        }
+      ]
+    }
+  }
+  depends_on = [ helm_release.istio-ingress ]
+}
+
+# resource "kubernetes_manifest" "api-gateway" {
+#   manifest = yamldecode("${file("${path.module}/api-gateway.yaml")}")
+# }
+
+# resource "kubernetes_manifest" "istio-gateway" {
+#   manifest = yamldecode("${file("${path.module}/istio-gateway.yaml")}")
+# }

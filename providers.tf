@@ -8,6 +8,10 @@ terraform {
       source  = "hashicorp/helm"
       version = ">= 2.5.0"
     }
+    google = {
+      source  = "hashicorp/google"
+      version = "5.21.0"
+    }
   }
 }
 
@@ -26,8 +30,15 @@ provider "kubernetes" {
   client_key             = base64decode(module.gcp_gke.gke_client_key)
   cluster_ca_certificate = base64decode(module.gcp_gke.gke_cluster_ca_certificate)
   token                  = data.google_client_config.current.access_token
-
 }
+
+# provider "kubectl" {
+#   host                   = "https://${module.gcp_gke.gke_cluster_endpoint}"
+#   client_certificate     = base64decode(module.gcp_gke.gke_client_certificate)
+#   client_key             = base64decode(module.gcp_gke.gke_client_key)
+#   cluster_ca_certificate = base64decode(module.gcp_gke.gke_cluster_ca_certificate)
+#   token                  = data.google_client_config.current.access_token
+# }
 
 provider "helm" {
   kubernetes {
